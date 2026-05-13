@@ -33,6 +33,8 @@ public class Produto {
 
     private BigDecimal preco;
 
+    private Integer quantidade;
+
     @ManyToOne
     @JoinColumn(name = "idCategoria", nullable = false)
     private Categoria categoria;

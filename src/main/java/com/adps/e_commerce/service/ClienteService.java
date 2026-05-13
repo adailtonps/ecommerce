@@ -1,9 +1,11 @@
 package com.adps.e_commerce.service;
 
+import com.adps.e_commerce.domain.Carrinho;
 import com.adps.e_commerce.domain.Cliente;
 import com.adps.e_commerce.dto.ClienteCadastroDTO;
 import com.adps.e_commerce.dto.ClienteResponse2DTO;
 import com.adps.e_commerce.dto.ClienteResponseDTO;
+import com.adps.e_commerce.enums.StatusCarrinho;
 import com.adps.e_commerce.enums.StatusUsuario;
 import com.adps.e_commerce.enums.UsuarioRole;
 import com.adps.e_commerce.exception.RegradeNegocioException;
@@ -116,6 +118,39 @@ public class ClienteService {
                 cliente.getEndereco(),
                 cliente.getStatusUser()
         );
+    }
+
+    public ResponseEntity<String> desativarUser(Cliente clienteLogado, String senha, Carrinho carrinho) {
+        if (clienteLogado.getStatusUser().equals(StatusUsuario.DESATIVADO)) {
+            throw new RegradeNegocioException("A conta já está desativada!");
+        }
+        if(carrinho.getStatusCarrinho().equals(StatusCarrinho.DESATIVADO)) {
+            throw new RegradeNegocioException("Carrinho desativado!");
+        }
+        if (senha == null || senha.isBlank()) {
+            throw new RegradeNegocioException("Insira a senha!");
+        }
+        if (!encoder.matches(senha, clienteLogado.getSenha())) {
+            throw new RegradeNegocioException("Senha incorreta!");
+        }
+        clienteLogado.setStatusUser(StatusUsuario.DESATIVADO);
+        carrinho.setStatusCarrinho(StatusCarrinho.DESATIVADO);
+        return ResponseEntity.ok().body("Conta desativada com sucesso!");
+    }
+
+    public ResponseEntity<String> ativarUser(Carrinho carrinho, String senha, Cliente clienteLogado) {
+        if(clienteLogado.getStatusUser().equals(StatusUsuario.ATIVADO)) {
+            throw new RegradeNegocioException("A conta já está ativada!");
+        }
+        if(senha == null || senha.isBlank()) {
+            throw new RegradeNegocioException("Insira a senha!");
+        }
+        if(!encoder.matches(senha, clienteLogado.getSenha())) {
+            throw new RegradeNegocioException("Senha incorreta!");
+        }
+        clienteLogado.setStatusUser(StatusUsuario.ATIVADO);
+        carrinho.setStatusCarrinho(StatusCarrinho.ATIVADO);
+        return ResponseEntity.ok().body("Conta ativada com sucesso!");
     }
 
     public ResponseEntity<String> deletarCliente(String senha, Cliente clienteLogado){

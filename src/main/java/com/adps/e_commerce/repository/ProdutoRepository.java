@@ -11,9 +11,9 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-public interface ProdutoRepository extends JpaRepository<Produto,String> {
+public interface ProdutoRepository extends JpaRepository<Produto,Integer> {
     @Override
-    Optional<Produto> findById(String idProduto);
+    Optional<Produto> findById(Integer idProduto);
     @Modifying
     @Transactional
     @Query("""
