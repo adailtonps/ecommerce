@@ -10,4 +10,5 @@ import java.util.Optional;
 
 public interface CarrinhoRepository extends JpaRepository<Carrinho,Integer> {
     Optional<Carrinho> findByClienteAndStatusCarrinho(Cliente cliente, StatusCarrinho status);
+    Carrinho findByCliente (Cliente cliente);
 }

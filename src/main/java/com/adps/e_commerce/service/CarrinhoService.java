@@ -1,10 +1,7 @@
 package com.adps.e_commerce.service;
 
 import com.adps.e_commerce.domain.*;
-import com.adps.e_commerce.dto.ClienteProdutoCarrinhoDTO;
 import com.adps.e_commerce.enums.StatusCarrinho;
-import com.adps.e_commerce.enums.StatusItem;
-import com.adps.e_commerce.enums.StatusUsuario;
 import com.adps.e_commerce.exception.RegradeNegocioException;
 import com.adps.e_commerce.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +27,7 @@ public class CarrinhoService {
     @Autowired
     private ProdutoRepository produtoRepository;
 
-    public Carrinho criarCarrinho(Cliente cliente, LocalDateTime dataHoraCriacao) {
+    public Carrinho buscarCarrinho(Cliente cliente) {
         Optional<Carrinho> carrinhoExistente = carrinhoRepository.findByClienteAndStatusCarrinho(cliente, StatusCarrinho.ATIVADO);
         if(carrinhoExistente.isPresent()) {
             return carrinhoExistente.get();
@@ -44,7 +41,7 @@ public class CarrinhoService {
             throw new RegradeNegocioException("Esse produto não está disponível!");
         }
 
-        Carrinho carrinho = criarCarrinho(cliente, LocalDateTime.now());
+        Carrinho carrinho = buscarCarrinho(cliente);
 
         ItemCarrinho itemExiste = itemCarrinhoRepository.findByCarrinhoAndProduto(carrinho, produto);
 
@@ -73,8 +70,8 @@ public class CarrinhoService {
             throw new RegradeNegocioException("Quantidade indisponível!");
         }
 
-        if(carrinho.getStatusCarrinho() == StatusCarrinho.FINALIZADO){
-            throw new RegradeNegocioException("Carrinho finalizado!");
+        if(carrinho.getStatusCarrinho() == StatusCarrinho.DESATIVADO){
+            throw new RegradeNegocioException("Carrinho desativado!");
         }
 
         if(!itemExiste.getCarrinho().getCliente().equals(cliente)){
@@ -94,8 +91,8 @@ public class CarrinhoService {
         ItemCarrinho itemExiste = itemCarrinhoRepository.findById(itemCarrinho.getIdItem())
                 .orElseThrow(() -> new RegradeNegocioException("Esse item não está no carrinho!"));
 
-        if(carrinho.getStatusCarrinho() == StatusCarrinho.FINALIZADO){
-            throw new RegradeNegocioException("Carrinho finalizado!");
+        if(carrinho.getStatusCarrinho() == StatusCarrinho.DESATIVADO){
+            throw new RegradeNegocioException("Carrinho desativado!");
         }
 
         if(!itemExiste.getCarrinho().getCliente().equals(clienteLogado)){
@@ -116,8 +113,8 @@ public class CarrinhoService {
         ItemCarrinho itemExiste = itemCarrinhoRepository.findById(itemCarrinho.getIdItem())
                 .orElseThrow(() -> new RegradeNegocioException("Esse item não está no carrinho!"));
 
-        if(carrinho.getStatusCarrinho() == StatusCarrinho.FINALIZADO){
-            throw new RegradeNegocioException("Carrinho finalizado!");
+        if(carrinho.getStatusCarrinho() == StatusCarrinho.DESATIVADO){
+            throw new RegradeNegocioException("Carrinho desativado!");
         }
 
         itemCarrinhoRepository.delete(itemExiste);

@@ -2,6 +2,7 @@ package com.adps.e_commerce.service;
 
 import com.adps.e_commerce.domain.Carrinho;
 import com.adps.e_commerce.domain.Cliente;
+import com.adps.e_commerce.domain.ItemCarrinho;
 import com.adps.e_commerce.dto.ClienteCadastroDTO;
 import com.adps.e_commerce.dto.ClienteResponse2DTO;
 import com.adps.e_commerce.dto.ClienteResponseDTO;
@@ -9,6 +10,7 @@ import com.adps.e_commerce.enums.StatusCarrinho;
 import com.adps.e_commerce.enums.StatusUsuario;
 import com.adps.e_commerce.enums.UsuarioRole;
 import com.adps.e_commerce.exception.RegradeNegocioException;
+import com.adps.e_commerce.repository.CarrinhoRepository;
 import com.adps.e_commerce.repository.ClienteRepository;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -19,6 +21,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -31,8 +35,11 @@ public class ClienteService {
     @Autowired
     private PasswordEncoder encoder;
 
+    @Autowired
+    private CarrinhoRepository carrinhoRepository;
 
-    public ClienteResponseDTO criarCliente(ClienteCadastroDTO cliente){
+
+    public ClienteResponseDTO criarCliente(ClienteCadastroDTO cliente, ItemCarrinho itemCarrinho){
         Cliente novoCadastro = new Cliente();
 
         boolean letraMaiuscula = false;
@@ -76,8 +83,16 @@ public class ClienteService {
         novoCadastro.setTelefone(cliente.getTelefone());
         novoCadastro.setEmail(cliente.getEmail());
 
-
         Cliente clienteSalvo = clienteRepository.save(novoCadastro);
+
+        Carrinho novoCarrinho = new Carrinho();
+
+        novoCarrinho.setCliente(novoCadastro);
+        novoCarrinho.setValorTotal(BigDecimal.ZERO);
+        novoCarrinho.setStatusCarrinho(StatusCarrinho.ATIVADO);
+        novoCarrinho.setDataCriacao(LocalDateTime.now());
+
+        carrinhoRepository.save(novoCarrinho);
 
         return new ClienteResponseDTO(
                 clienteSalvo.getIdCliente(),

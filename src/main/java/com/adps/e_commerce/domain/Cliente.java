@@ -50,5 +50,5 @@ public class Cliente {
     private StatusUsuario statusUser;
 
     @OneToMany(mappedBy = "cliente")
-    private List<Carrinho> carrinhos;
+    private Carrinho carrinho;
 }
