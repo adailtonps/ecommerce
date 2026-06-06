@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -33,12 +34,12 @@ public class Produto {
 
     private BigDecimal preco;
 
-    private Integer quantidade;
+    private Integer qntEstoque;
 
     @ManyToOne
     @JoinColumn(name = "idCategoria", nullable = false)
     private Categoria categoria;
 
     @OneToMany
-    private ItemCarrinho itemCarrinho;
+    private List<ItemCarrinho> itemCarrinho;
 }

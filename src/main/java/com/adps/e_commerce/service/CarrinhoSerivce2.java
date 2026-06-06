@@ -1,12 +1,12 @@
 package com.adps.e_commerce.service;
 
 import com.adps.e_commerce.domain.Carrinho;
-import com.adps.e_commerce.domain.Cliente;
+import com.adps.e_commerce.domain.Usuario;
 import com.adps.e_commerce.domain.ItemCarrinho;
 import com.adps.e_commerce.dto.ItemCarrinhoDTO;
 import com.adps.e_commerce.exception.RegradeNegocioException;
 import com.adps.e_commerce.repository.CarrinhoRepository;
-import com.adps.e_commerce.repository.ClienteRepository;
+import com.adps.e_commerce.repository.UsuarioRepository;
 import com.adps.e_commerce.repository.ItemCarrinhoRepository;
 import com.adps.e_commerce.repository.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,10 +26,10 @@ public class CarrinhoSerivce2 {
     private CarrinhoRepository carrinhoRepository;
 
     @Autowired
-    private ClienteRepository clienteRepository;
+    private UsuarioRepository usuarioRepository;
 
-    public List<ItemCarrinhoDTO> mostrarItensCarrinho(Cliente clienteLogado) {
-        Carrinho carrinho = carrinhoRepository.findByCliente(clienteLogado);
+    public List<ItemCarrinhoDTO> mostrarItensCarrinho(Usuario usuarioLogado) {
+        Carrinho carrinho = carrinhoRepository.findByUsuario(usuarioLogado);
 
         if (carrinho == null) {
             throw new RegradeNegocioException("Nenhum carrinho encontrado!");

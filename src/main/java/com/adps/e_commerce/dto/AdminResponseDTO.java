@@ -11,12 +11,11 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ClienteCadastroDTO {
-    private String idUsuario;
-    private String nomeUsuario;
-    private String telefone;
+public class AdminResponseDTO {
+    private String idCliente;
+    private String nomeCliente;
     private String email;
-    private String senha;
-    private StatusUsuario statusUsuario;
-    private UsuarioRole usuarioRole;
+    private String telefone;
+    private String endereco;
+    private StatusUsuario userStatus;
 }

@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -17,20 +16,20 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Cliente {
+public class Usuario {
     @Id
-    private String idCliente;
+    private String idUsuario;
 
     @PrePersist
     public void gerarId(){
-        if(this.idCliente == null){
-            this.idCliente = UUID.randomUUID().toString()
+        if(this.idUsuario == null){
+            this.idUsuario = UUID.randomUUID().toString()
                     .replace("-","")
                     .toUpperCase()
                     .substring(0, 8);
     }}
 
-    private String nomeCliente;
+    private String nomeUsuario;
 
     @Column(unique = true)
     private String email;
@@ -38,7 +37,13 @@ public class Cliente {
     @Column(unique = true)
     private String telefone;
 
-    private String endereco;
+    private String rua;
+    private Integer numero;
+    private String bairro;
+    private String cidade;
+    private String estado;
+    private Integer cep;
+    private String complemento;
 
     @JsonIgnore
     private String senha;
@@ -49,6 +54,6 @@ public class Cliente {
     @Enumerated(EnumType.STRING)
     private StatusUsuario statusUser;
 
-    @OneToMany(mappedBy = "cliente")
+    @OneToOne(mappedBy = "usuario")
     private Carrinho carrinho;
 }

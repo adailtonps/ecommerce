@@ -16,4 +16,5 @@ public class ProdutoResponseDTO {
     private String descricao;
     private Integer idCategoria;
     private String nomeCategoria;
+    private Integer qtnEstoque;
 }

@@ -16,11 +16,9 @@ import java.util.List;
 @RequestMapping("/categoria")
 public class CategoriaController {
     private final CategoriaService categoriaService;
-    private final CategoriaRepository categoriaRepository;
 
-    public CategoriaController(CategoriaService categoriaService, CategoriaRepository categoriaRepository) {
+    public CategoriaController(CategoriaService categoriaService) {
         this.categoriaService = categoriaService;
-        this.categoriaRepository = categoriaRepository;
     }
 
     @PostMapping

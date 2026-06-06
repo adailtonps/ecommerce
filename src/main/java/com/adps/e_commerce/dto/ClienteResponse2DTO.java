@@ -15,6 +15,5 @@ public class ClienteResponse2DTO {
     private String nomeCliente;
     private String email;
     private String telefone;
-    private String endereco;
     private StatusUsuario userStatus;
 }

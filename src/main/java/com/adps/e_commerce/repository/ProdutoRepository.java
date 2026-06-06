@@ -11,9 +11,9 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-public interface ProdutoRepository extends JpaRepository<Produto,Integer> {
+public interface ProdutoRepository extends JpaRepository<Produto,String> {
     @Override
-    Optional<Produto> findById(Integer idProduto);
+    Optional<Produto> findById(String idProduto);
     @Modifying
     @Transactional
     @Query("""
@@ -24,6 +24,6 @@ public interface ProdutoRepository extends JpaRepository<Produto,Integer> {
     List<Produto> findByCategoriaIdCategoria(Integer idCategoria);
     List<Produto> findByNomeContainingIgnoreCase(String nome);
     List<Produto> findByNomeContainingIgnoreCaseAndCategoriaIdCategoria(String nome, Integer idCategoria);
-    List<Produto> findByPreco(BigDecimal preco);
+    List<Produto> findByPrecoLessThanEqual(BigDecimal preco);
 
 }

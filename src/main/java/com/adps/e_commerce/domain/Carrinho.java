@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -19,14 +20,15 @@ public class Carrinho {
 
     private BigDecimal valorTotal;
 
+    @Enumerated(EnumType.STRING)
     private StatusCarrinho statusCarrinho;
 
-    @ManyToOne
-    @JoinColumn(name = "id_cliente")
-    private Cliente cliente;
+    @OneToOne
+    @JoinColumn(name = "usuario")
+    private Usuario usuario;
 
     private LocalDateTime dataCriacao;
 
     @OneToMany
-    private ItemCarrinho itemCarrinho;
+    private List<ItemCarrinho> itemCarrinho;
 }

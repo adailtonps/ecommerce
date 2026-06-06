@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ProdutoService {
@@ -44,11 +43,15 @@ public class ProdutoService {
         if(produto.getDescricao() == null || produto.getDescricao().isBlank()){
             throw new RegradeNegocioException("Descrição obrigatória!");
         }
+        if (produto.getQntEstoque() == null || produto.getQntEstoque() <= 0){
+            throw new RegradeNegocioException("Produto sem estoque definido!");
+        }
 
         novoProduto.setCategoria(categoria);
         novoProduto.setNome(produto.getNome());
         novoProduto.setPreco(produto.getPreco());
         novoProduto.setDescricao(produto.getDescricao());
+        novoProduto.setQntEstoque(produto.getIdCategoria());
 
         Produto produtoSalvo = produtoRepository.save(novoProduto);
         return new ProdutoResponseDTO(
@@ -57,7 +60,8 @@ public class ProdutoService {
                 produtoSalvo.getPreco(),
                 produtoSalvo.getDescricao(),
                 categoria.getIdCategoria(),
-                categoria.getNomeCategoria()
+                categoria.getNomeCategoria(),
+                produtoSalvo.getQntEstoque()
         );
     }
 
@@ -75,7 +79,7 @@ public class ProdutoService {
         } else if(idCategoria != null){
             produtosCadastrados = produtoRepository.findByCategoriaIdCategoria(idCategoria);
         } else if (preco != null){
-            produtosCadastrados = produtoRepository.findByPreco(preco);
+            produtosCadastrados = produtoRepository.findByPrecoLessThanEqual(preco);
         } else {
             produtosCadastrados = produtoRepository.findAll();
         }
@@ -93,7 +97,8 @@ public class ProdutoService {
                             : null,
                         itemCadastrado.getCategoria() != null
                             ? itemCadastrado.getCategoria().getNomeCategoria()
-                            : "Sem categoria!"
+                            : "Sem categoria!",
+                        itemCadastrado.getQntEstoque()
                 )
                 ).toList();
     }
@@ -115,6 +120,9 @@ public class ProdutoService {
         if(produto.getDescricao() != null && produto.getDescricao().isBlank()){
             throw new RegradeNegocioException("Preencha a descrição corretamente!");
         }
+        if(produto.getQtnEstoque() != null && produto.getQtnEstoque().intValue() < 0){
+            throw new RegradeNegocioException("Estoque não pode ser menor que 0!");
+        }
 
         if(produto.getNome() != null){
             atualizarProduto.setNome(produto.getNome());
@@ -130,6 +138,9 @@ public class ProdutoService {
                     .orElseThrow(() -> new CategoriaNaoEncontradaException("Categoria não encontrada!"));
             atualizarProduto.setCategoria(categorias);
         }
+        if(produto.getQtnEstoque() != null){
+            atualizarProduto.setQntEstoque(produto.getQtnEstoque());
+        }
 
         Produto salvarProdutoAtualizado = produtoRepository.save(atualizarProduto);
 
@@ -139,7 +150,8 @@ public class ProdutoService {
                 salvarProdutoAtualizado.getPreco(),
                 salvarProdutoAtualizado.getDescricao(),
                 salvarProdutoAtualizado.getCategoria().getIdCategoria(),
-                salvarProdutoAtualizado.getCategoria().getNomeCategoria()
+                salvarProdutoAtualizado.getCategoria().getNomeCategoria(),
+                salvarProdutoAtualizado.getQntEstoque()
         );
     }
 

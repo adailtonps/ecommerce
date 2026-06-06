@@ -1,14 +1,13 @@
 package com.adps.e_commerce.repository;
 
 import com.adps.e_commerce.domain.Carrinho;
-import com.adps.e_commerce.domain.Cliente;
+import com.adps.e_commerce.domain.Usuario;
 import com.adps.e_commerce.enums.StatusCarrinho;
-import com.adps.e_commerce.enums.StatusUsuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
 public interface CarrinhoRepository extends JpaRepository<Carrinho,Integer> {
-    Optional<Carrinho> findByClienteAndStatusCarrinho(Cliente cliente, StatusCarrinho status);
-    Carrinho findByCliente (Cliente cliente);
+    Optional<Carrinho> findByUsuarioAndStatusCarrinho(Usuario usuario, StatusCarrinho status);
+    Carrinho findByUsuario(Usuario usuario);
 }

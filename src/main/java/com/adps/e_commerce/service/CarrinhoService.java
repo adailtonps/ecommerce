@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 
@@ -22,13 +21,13 @@ public class CarrinhoService {
     private CarrinhoRepository carrinhoRepository;
 
     @Autowired
-    private ClienteRepository clienteRepository;
+    private UsuarioRepository usuarioRepository;
 
     @Autowired
     private ProdutoRepository produtoRepository;
 
-    public Carrinho buscarCarrinho(Cliente cliente) {
-        Optional<Carrinho> carrinhoExistente = carrinhoRepository.findByClienteAndStatusCarrinho(cliente, StatusCarrinho.ATIVADO);
+    public Carrinho buscarCarrinho(Usuario usuario) {
+        Optional<Carrinho> carrinhoExistente = carrinhoRepository.findByUsuarioAndStatusCarrinho(usuario, StatusCarrinho.ATIVADO);
         if(carrinhoExistente.isPresent()) {
             return carrinhoExistente.get();
         } else {
@@ -36,12 +35,12 @@ public class CarrinhoService {
         }
     }
 
-    public ResponseEntity<String> adicionarProduto(Cliente cliente, Produto produto) {
-        if(produto.getQuantidade() == 0){
+    public ResponseEntity<String> adicionarProduto(Usuario usuario, Produto produto) {
+        if(produto.getQntEstoque() == 0){
             throw new RegradeNegocioException("Esse produto não está disponível!");
         }
 
-        Carrinho carrinho = buscarCarrinho(cliente);
+        Carrinho carrinho = buscarCarrinho(usuario);
 
         ItemCarrinho itemExiste = itemCarrinhoRepository.findByCarrinhoAndProduto(carrinho, produto);
 
@@ -62,11 +61,11 @@ public class CarrinhoService {
         return ResponseEntity.ok().body("Produto adicionado com sucesso!");
     }
 
-    public ResponseEntity<String> aumentarQuantidade(ItemCarrinho itemCarrinho, Produto produto, Carrinho carrinho, Cliente cliente) {
+    public ResponseEntity<String> aumentarQuantidade(ItemCarrinho itemCarrinho, Produto produto, Carrinho carrinho, Usuario usuario) {
         ItemCarrinho itemExiste = itemCarrinhoRepository.findById(itemCarrinho.getIdItem())
                 .orElseThrow(() -> new RegradeNegocioException("Esse item não está no carrinho!"));
 
-        if(itemExiste.getQuantidade() + 1 > produto.getQuantidade()){
+        if(itemExiste.getQuantidade() + 1 > produto.getQntEstoque()){
             throw new RegradeNegocioException("Quantidade indisponível!");
         }
 
@@ -74,7 +73,7 @@ public class CarrinhoService {
             throw new RegradeNegocioException("Carrinho desativado!");
         }
 
-        if(!itemExiste.getCarrinho().getCliente().equals(cliente)){
+        if(!itemExiste.getCarrinho().getUsuario().equals(usuario)){
             throw new RegradeNegocioException("Carrinho não pertence ao cliente!");
         }
 
@@ -87,7 +86,7 @@ public class CarrinhoService {
         return ResponseEntity.ok().body("Quantidade atualizada com sucesso!");
     }
 
-    public ResponseEntity<String> diminuirQuantidade(ItemCarrinho itemCarrinho, Produto produto, Cliente clienteLogado, Carrinho carrinho){
+    public ResponseEntity<String> diminuirQuantidade(ItemCarrinho itemCarrinho, Produto produto, Usuario usuarioLogado, Carrinho carrinho){
         ItemCarrinho itemExiste = itemCarrinhoRepository.findById(itemCarrinho.getIdItem())
                 .orElseThrow(() -> new RegradeNegocioException("Esse item não está no carrinho!"));
 
@@ -95,7 +94,7 @@ public class CarrinhoService {
             throw new RegradeNegocioException("Carrinho desativado!");
         }
 
-        if(!itemExiste.getCarrinho().getCliente().equals(clienteLogado)){
+        if(!itemExiste.getCarrinho().getUsuario().equals(usuarioLogado)){
             throw new RegradeNegocioException("Carrinho não pertence ao cliente!");
         }
 
