@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -25,6 +26,11 @@ public class SecutiryConfig {
     @Autowired
     private FiltroJWT filtroJWT;
 
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     @Bean
     public AuthenticationManager authenticationManager
@@ -43,18 +49,15 @@ public class SecutiryConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/auth/cliente").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/admin/criar").hasRole("ADMIN")
 
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers(HttpMethod.POST,"/categoria").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT,"/categoria").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET,"/categoria").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE,"/categoria").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/produto/**").hasAnyRole("ADMIN","USER")
+                        .requestMatchers(HttpMethod.GET, "/categoria/**").hasAnyRole("ADMIN","USER")
 
-                        .requestMatchers(HttpMethod.POST,"/produto").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT,"/produto").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET,"/produto").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.OPTIONS,"/produto").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE,"/produto").hasRole("ADMIN")
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/cliente/**").hasRole("USER")
+                        .requestMatchers("/categoria/**").hasRole("ADMIN")
+                        .requestMatchers("/produto/**").hasRole("ADMIN")
 
                         .anyRequest().authenticated()
 

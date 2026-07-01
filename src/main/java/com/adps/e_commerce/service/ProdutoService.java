@@ -32,7 +32,7 @@ public class ProdutoService {
         Produto novoProduto = new Produto();
 
         Categoria categoria = categoriaRepository.findById(produto.getIdCategoria())
-                .orElseThrow(() -> new CategoriaNaoEncontradaException("Categoria não encontrada!"));
+                .orElseThrow(() -> new RegradeNegocioException("Categoria não encontrada!"));
 
         if(produto.getNome() == null || produto.getNome().isBlank()){
             throw new RegradeNegocioException("Nome obrigatório!");
@@ -51,7 +51,7 @@ public class ProdutoService {
         novoProduto.setNome(produto.getNome());
         novoProduto.setPreco(produto.getPreco());
         novoProduto.setDescricao(produto.getDescricao());
-        novoProduto.setQntEstoque(produto.getIdCategoria());
+        novoProduto.setQntEstoque(produto.getQntEstoque());
 
         Produto produtoSalvo = produtoRepository.save(novoProduto);
         return new ProdutoResponseDTO(
@@ -81,7 +81,7 @@ public class ProdutoService {
         } else if (preco != null){
             produtosCadastrados = produtoRepository.findByPrecoLessThanEqual(preco);
         } else {
-            produtosCadastrados = produtoRepository.findAll();
+            throw new RegradeNegocioException("Parâmetro inválido!");
         }
         if(produtosCadastrados.isEmpty()){
             throw new RegradeNegocioException("Nenhum produto cadastrado!");

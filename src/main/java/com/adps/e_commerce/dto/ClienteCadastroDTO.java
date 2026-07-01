@@ -13,10 +13,17 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ClienteCadastroDTO {
     private String idUsuario;
-    private String nomeUsuario;
+    private String nome;
     private String telefone;
     private String email;
     private String senha;
     private StatusUsuario statusUsuario;
+    private String rua;
+    private Integer numero;
+    private String bairro;
+    private String cidade;
+    private String estado;
+    private String cep;
+    private String complemento;
     private UsuarioRole usuarioRole;
 }

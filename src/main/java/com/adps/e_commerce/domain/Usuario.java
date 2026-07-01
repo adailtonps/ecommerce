@@ -29,7 +29,7 @@ public class Usuario {
                     .substring(0, 8);
     }}
 
-    private String nomeUsuario;
+    private String nome;
 
     @Column(unique = true)
     private String email;
@@ -37,12 +37,13 @@ public class Usuario {
     @Column(unique = true)
     private String telefone;
 
+
     private String rua;
     private Integer numero;
     private String bairro;
     private String cidade;
     private String estado;
-    private Integer cep;
+    private String cep;
     private String complemento;
 
     @JsonIgnore

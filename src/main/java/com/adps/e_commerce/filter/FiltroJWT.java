@@ -49,7 +49,7 @@ public class FiltroJWT extends OncePerRequestFilter {
                             .orElse(null);
 
                     if(usuario != null){
-                        var authorities = List.of(new SimpleGrantedAuthority(role));
+                        var authorities = List.of(new SimpleGrantedAuthority("ROLE_" +role));
 
                     var authentication = new UsernamePasswordAuthenticationToken(
                             usuario,

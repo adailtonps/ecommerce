@@ -35,7 +35,7 @@ public class ProdutoController {
         return ResponseEntity.ok(produtosCadastrados);
     }
 
-    @PutMapping
+    @PatchMapping
     public ResponseEntity<ProdutoResponseDTO> atualizarProduto(@RequestBody AtualizarProdutoDTO produto){
         ProdutoResponseDTO novoProduto = produtoService.atualizarProduto(produto);
         return ResponseEntity.ok(novoProduto);

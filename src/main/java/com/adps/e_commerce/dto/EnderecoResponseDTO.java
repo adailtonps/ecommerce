@@ -14,7 +14,7 @@ public class EnderecoResponseDTO {
     private String bairro;
     private String cidade;
     private String estado;
-    private Integer cep;
+    private String cep;
     private String complemento;
 
 }

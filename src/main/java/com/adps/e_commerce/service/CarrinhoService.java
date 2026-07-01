@@ -36,7 +36,7 @@ public class CarrinhoService {
     }
 
     public ResponseEntity<String> adicionarProduto(Usuario usuario, Produto produto) {
-        if(produto.getQntEstoque() == 0){
+        if(produto.getQntEstoque() <= 0){
             throw new RegradeNegocioException("Esse produto não está disponível!");
         }
 

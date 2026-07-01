@@ -19,16 +19,11 @@ public class UserDetailsService implements org.springframework.security.core.use
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
     @Override
     public UserDetails loadUserByUsername(String email){
         Usuario usuario = usuarioRepository.findByEmail(email)
                 .orElseThrow(() ->
-                        new UsernameNotFoundException("Usuario no encontrado"));
+                        new UsernameNotFoundException("Usuário não encontrado"));
 
         return User
                 .builder()

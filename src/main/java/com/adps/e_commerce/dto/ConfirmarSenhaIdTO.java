@@ -7,8 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AtualizarUserResponseDTO {
-    private String nome;
-    private String telefone;
-    private String email;
+public class ConfirmarSenhaIdTO {
+    private String idUsuario;
+    private String senha;
 }

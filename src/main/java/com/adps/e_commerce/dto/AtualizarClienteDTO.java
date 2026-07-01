@@ -10,7 +10,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AtualizarClienteDTO {
-    private String nomeUsuario;
+    private String nome;
     private String telefone;
     private String email;
 }

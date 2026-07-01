@@ -42,7 +42,7 @@ public class ClienteService {
         boolean digitoEspecial = false;
         boolean numero = false;
 
-        if(cliente.getNomeUsuario() == null || cliente.getNomeUsuario().isBlank()){
+        if(cliente.getNome() == null || cliente.getNome().isBlank()){
             throw new RegradeNegocioException("Digite o nome do cliente!");
         }
         if(cliente.getTelefone() == null || cliente.getTelefone().isBlank() ||
@@ -77,7 +77,7 @@ public class ClienteService {
         novoCadastro.setSenha(encoder.encode(cliente.getSenha()));
         novoCadastro.setStatusUser(StatusUsuario.ATIVADO);
         novoCadastro.setUserRole(UsuarioRole.USER);
-        novoCadastro.setNomeUsuario(cliente.getNomeUsuario().trim().toUpperCase());
+        novoCadastro.setNome(cliente.getNome().trim().toUpperCase());
         novoCadastro.setTelefone(cliente.getTelefone().trim());
         novoCadastro.setEmail(cliente.getEmail().toLowerCase().trim());
 
@@ -94,91 +94,96 @@ public class ClienteService {
 
         return new UsuarioResponseDTO(
                 usuarioSalvo.getIdUsuario(),
-                usuarioSalvo.getNomeUsuario(),
+                usuarioSalvo.getNome(),
                 usuarioSalvo.getEmail(),
                 usuarioSalvo.getTelefone(),
                 usuarioSalvo.getStatusUser()
         );
     }
 
-    public EnderecoResponseDTO atualizarEndereco(EnderecoCadastrodTO endereco, Usuario usuario){
+    public EnderecoResponseDTO atualizarEndereco(EnderecoCadastrodTO endereco, Usuario usuarioLogado){
        if(endereco.getRua() == null || endereco.getNumero() == null || endereco.getBairro() == null ||
                endereco.getCidade() == null || endereco.getEstado() == null ||
                endereco.getCep() == null){
-           throw new RegradeNegocioException("Digite o seu endereço completo! (Complemento opcional)");
+           throw new RegradeNegocioException("Digite o seu endereço completo e corretamente! (Complemento opcional)");
        }
-       if(endereco.getRua() != null && usuario.getRua().isBlank()){
-           usuario.setRua(endereco.getRua().trim().toUpperCase());
-       }
-       if(endereco.getNumero() != null){
-           usuario.setNumero(endereco.getNumero());
-       }
-       if(endereco.getBairro() != null){
-           usuario.setBairro(endereco.getBairro().trim().toUpperCase());
-       }
-       if(endereco.getCidade() != null){
-           usuario.setCidade(endereco.getCidade().trim().toUpperCase());
-       }
-       if(endereco.getEstado() != null){
-           usuario.setEstado(endereco.getEstado().trim().toUpperCase());
-       }
-       if(endereco.getCep() != null){
-           usuario.setCep(endereco.getCep());
-       }
-       if(endereco.getComplemento() != null){
-           usuario.setComplemento(endereco.getComplemento().trim().toUpperCase());
-       }
-       usuarioRepository.save(usuario);
+           usuarioLogado.setRua(endereco.getRua().trim().toUpperCase());
+           usuarioLogado.setNumero(endereco.getNumero());
+           usuarioLogado.setBairro(endereco.getBairro().trim().toUpperCase());
+           usuarioLogado.setCidade(endereco.getCidade().trim().toUpperCase());
+           usuarioLogado.setEstado(endereco.getEstado().trim().toUpperCase());
+
+           if(endereco.getCep().length() != 8){
+               throw new RegradeNegocioException("CEP inválido!");
+           }
+
+           usuarioLogado.setCep(endereco.getCep().trim().toUpperCase());
+
+           if(endereco.getComplemento() != null && !endereco.getComplemento().isBlank()){
+               usuarioLogado.setComplemento(endereco.getComplemento().trim().toUpperCase());
+           }
+       usuarioRepository.save(usuarioLogado);
        return new EnderecoResponseDTO(
-               "Endereço atualizado com sucesso!\n",
-               usuario.getRua(),
-               usuario.getNumero(),
-               usuario.getBairro(),
-               usuario.getCidade(),
-               usuario.getEstado(),
-               usuario.getCep(),
-               usuario.getComplemento()
+               "Endereço atualizado com sucesso!",
+               usuarioLogado.getRua(),
+               usuarioLogado.getNumero(),
+               usuarioLogado.getBairro(),
+               usuarioLogado.getCidade(),
+               usuarioLogado.getEstado(),
+               usuarioLogado.getCep(),
+               usuarioLogado.getComplemento()
        );
     }
 
 
-    public ClienteResponse2DTO minhaConta(Usuario usuario){
+    public ClienteResponse2DTO minhaConta(Usuario usuarioLogado){
         return new ClienteResponse2DTO(
-                usuario.getIdUsuario(),
-                usuario.getNomeUsuario(),
-                usuario.getEmail(),
-                usuario.getTelefone(),
-                usuario.getStatusUser()
+                usuarioLogado.getIdUsuario(),
+                usuarioLogado.getNome(),
+                usuarioLogado.getEmail(),
+                usuarioLogado.getTelefone(),
+                usuarioLogado.getRua(),
+                usuarioLogado.getNumero(),
+                usuarioLogado.getBairro(),
+                usuarioLogado.getCidade(),
+                usuarioLogado.getEstado(),
+                usuarioLogado.getCep(),
+                usuarioLogado.getComplemento(),
+                usuarioLogado.getStatusUser()
         );
     }
 
-    public AtualizarUserResponseDTO atualizarDados(AtualizarClienteDTO atualizar, Usuario usuario){
-        if(atualizar.getNomeUsuario() != null && !atualizar.getNomeUsuario().isBlank()){
-            usuario.setNomeUsuario(atualizar.getNomeUsuario().trim().toUpperCase());
+    public AtualizarUserResponseDTO atualizarDados(AtualizarClienteDTO atualizar, Usuario usuarioLogado){
+        if(atualizar.getNome() != null && !atualizar.getNome().isBlank()){
+            usuarioLogado.setNome(atualizar.getNome().trim().toUpperCase());
         }
         if(atualizar.getTelefone() != null && !atualizar.getTelefone().isBlank()){
-            usuario.setTelefone(atualizar.getTelefone().trim());
+            usuarioLogado.setTelefone(atualizar.getTelefone().trim());
         }
         if(atualizar.getEmail() != null && atualizar.getEmail().contains("@") &&
             !atualizar.getEmail().isBlank()){
-            usuario.setEmail(atualizar.getEmail().toLowerCase().trim());
+            usuarioLogado.setEmail(atualizar.getEmail().toLowerCase().trim());
         }
-        usuarioRepository.save(usuario);
+        usuarioRepository.save(usuarioLogado);
 
         return new AtualizarUserResponseDTO(
-                usuario.getNomeUsuario(),
-                usuario.getEmail(),
-                usuario.getTelefone()
+                usuarioLogado.getNome(),
+                usuarioLogado.getEmail(),
+                usuarioLogado.getTelefone()
         );
     }
 
 
-    public ResponseEntity<String> desativarUser(Usuario usuarioLogado, String senha, Carrinho carrinho) {
+    public void desativarUser(String idUsuario, String senha, Usuario usuarioLogado) {
+        Carrinho carrinho = carrinhoRepository.findByUsuario(usuarioLogado);
+        if(carrinho == null){
+            throw new RegradeNegocioException("Usuário não possui carrinho");
+        }
+        if(idUsuario == null || !usuarioLogado.getIdUsuario().equals(idUsuario)){
+            throw new RegradeNegocioException("Você só pode desativar a sua conta!");
+        }
         if (usuarioLogado.getStatusUser().equals(StatusUsuario.DESATIVADO)) {
             throw new RegradeNegocioException("A conta já está desativada!");
-        }
-        if(carrinho.getStatusCarrinho().equals(StatusCarrinho.DESATIVADO)) {
-            throw new RegradeNegocioException("Carrinho desativado!");
         }
         if (senha == null || senha.isBlank()) {
             throw new RegradeNegocioException("Insira a senha!");
@@ -188,10 +193,20 @@ public class ClienteService {
         }
         usuarioLogado.setStatusUser(StatusUsuario.DESATIVADO);
         carrinho.setStatusCarrinho(StatusCarrinho.DESATIVADO);
-        return ResponseEntity.ok().body("Conta desativada com sucesso!");
+
+        usuarioRepository.save(usuarioLogado);
+        carrinhoRepository.save(carrinho);
     }
 
-    public ResponseEntity<String> ativarUser(Carrinho carrinho, String senha, Usuario usuarioLogado) {
+
+    public void ativarUser(String idUsuario, String senha, Usuario usuarioLogado) {
+        Carrinho carrinho = carrinhoRepository.findByUsuario(usuarioLogado);
+        if(carrinho == null){
+            throw new RegradeNegocioException("Usuário não possui carrinho");
+        }
+        if(idUsuario == null || !usuarioLogado.getIdUsuario().equals(idUsuario)){
+            throw new RegradeNegocioException("Você só pode ativar a sua conta!");
+        }
         if(usuarioLogado.getStatusUser().equals(StatusUsuario.ATIVADO)) {
             throw new RegradeNegocioException("A conta já está ativada!");
         }
@@ -203,17 +218,27 @@ public class ClienteService {
         }
         usuarioLogado.setStatusUser(StatusUsuario.ATIVADO);
         carrinho.setStatusCarrinho(StatusCarrinho.ATIVADO);
-        return ResponseEntity.ok().body("Conta ativada com sucesso!");
+
+        usuarioRepository.save(usuarioLogado);
+        carrinhoRepository.save(carrinho);
     }
 
-    public ResponseEntity<String> deletarCliente(String senha, Usuario usuarioLogado){
+    public void deletarCliente(String idUsuario, String senha, Usuario usuarioLogado){
         Usuario existUsuario = usuarioRepository.findByIdUsuario(usuarioLogado.getIdUsuario())
                 .orElseThrow(() -> new RegradeNegocioException("Cliente não existe ou já foi apagado!"));
+
+        Carrinho carrinho = carrinhoRepository.findByUsuario(usuarioLogado);
+
+        if(carrinho == null){
+            throw new RegradeNegocioException("Carrinho de usuário não encontrado!");
+        }
 
         if(existUsuario.getStatusUser().equals(StatusUsuario.ATIVADO)){
             throw new RegradeNegocioException("Desative a conta primeiro antes de apagar!");
         }
-
+        if(!existUsuario.getIdUsuario().equals(idUsuario)){
+            throw new RegradeNegocioException("Você só pode apagar a sua conta!");
+        }
         if(senha == null || senha.isBlank()){
             throw new RegradeNegocioException("Digite a senha!");
         }
@@ -223,8 +248,7 @@ public class ClienteService {
         if(usuarioLogado.getUserRole().equals(UsuarioRole.ADMIN)){
             throw new RegradeNegocioException("Administradores não podem apagar a própria conta!");
         }
-
+        carrinhoRepository.delete(carrinho);
         usuarioRepository.delete(existUsuario);
-        return new ResponseEntity<>("Cliente apagado com sucesso!", HttpStatus.OK);
     }
 }

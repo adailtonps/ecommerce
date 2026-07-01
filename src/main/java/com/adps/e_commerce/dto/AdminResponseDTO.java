@@ -1,7 +1,6 @@
 package com.adps.e_commerce.dto;
 
 import com.adps.e_commerce.enums.StatusUsuario;
-import com.adps.e_commerce.enums.UsuarioRole;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,10 +11,16 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AdminResponseDTO {
-    private String idCliente;
-    private String nomeCliente;
+    private String idUsuario;
+    private String nome;
     private String email;
     private String telefone;
-    private String endereco;
+    private String rua;
+    private Integer numero;
+    private String bairro;
+    private String cidade;
+    private String estado;
+    private String cep;
+    private String complemento;
     private StatusUsuario userStatus;
 }

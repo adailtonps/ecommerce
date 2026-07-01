@@ -3,7 +3,10 @@ package com.adps.e_commerce.service;
 import com.adps.e_commerce.domain.Carrinho;
 import com.adps.e_commerce.domain.Usuario;
 import com.adps.e_commerce.domain.ItemCarrinho;
+import com.adps.e_commerce.dto.EnderecoResponseDTO;
+import com.adps.e_commerce.dto.FinalizarCompraDTO;
 import com.adps.e_commerce.dto.ItemCarrinhoDTO;
+import com.adps.e_commerce.enums.UsuarioRole;
 import com.adps.e_commerce.exception.RegradeNegocioException;
 import com.adps.e_commerce.repository.CarrinhoRepository;
 import com.adps.e_commerce.repository.UsuarioRepository;
@@ -50,4 +53,5 @@ public class CarrinhoSerivce2 {
                         produtosNoCarrinho.getStatusItem()
                 )).toList();
     }
+
 }

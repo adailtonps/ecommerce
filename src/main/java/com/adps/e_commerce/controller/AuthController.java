@@ -6,6 +6,7 @@ import com.adps.e_commerce.dto.LoginResponseDTO;
 import com.adps.e_commerce.dto.UsuarioResponseDTO;
 import com.adps.e_commerce.service.ClienteService;
 import com.adps.e_commerce.service.JWTService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

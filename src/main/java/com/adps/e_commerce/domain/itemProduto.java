@@ -4,23 +4,25 @@ import com.adps.e_commerce.enums.StatusItem;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Getter
 @Setter
-public class ItemCarrinho {
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+public class itemProduto {
     @Id
-    private String idItem;
+    private String idItemProduto;
 
     @PrePersist
     public void gerarId(){
-        if(this.idItem == null){
-            this.idItem = UUID.randomUUID().toString()
+        if(this.idItemProduto == null){
+            this.idItemProduto = UUID.randomUUID().toString()
                     .replace("-","")
                     .toUpperCase()
                     .substring(0, 8);
@@ -29,9 +31,10 @@ public class ItemCarrinho {
     }
 
     @ManyToOne
-    private Carrinho carrinho;
+    private Pedido pedido;
 
     @ManyToOne
+    @JoinColumn(name="produto")
     private Produto produto;
 
     private Integer quantidade;
