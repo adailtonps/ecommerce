@@ -1,13 +1,13 @@
 package com.adps.e_commerce.domain;
 
-import com.adps.e_commerce.enums.ProdutoStatus;
-import com.adps.e_commerce.enums.StatusCarrinho;
+import com.adps.e_commerce.enums.PedidoStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
@@ -22,40 +22,31 @@ public class Pedido {
     private String idPedido;
 
     @PrePersist
-    public void gerarId(){
-        if(this.idPedido == null){
+    public void gerarDados() {
+        if (this.idPedido == null) {
             this.idPedido = UUID.randomUUID().toString()
-                    .replace("-","")
+                    .replace("-", "")
                     .toUpperCase()
                     .substring(0, 8);
 
         }
     }
 
+    private String codigoPagamento;
+
     @ManyToOne
     private Usuario usuario;
 
-    private Integer valorTotal;
+    private BigDecimal valorTotal;
 
-    private ProdutoStatus produtoStatus;
+    private PedidoStatus pedidoStatus;
 
-    private String codigoPagamento;
-    public void gerarCodigoPagamento(){
-        if(this.codigoPagamento == null){
-            this.codigoPagamento = "PAY-"+
-                    UUID.randomUUID()
-                            .toString()
-                            .replace("-","")
-                            .toUpperCase()
-                            .substring(0, 14);
-
-        }
-    }
+    private LocalDate dataPedido;
 
     private LocalDate dataPagamento;
 
-    @OneToMany(mappedBy = "produto")
-    private List<itemProduto> itemProduto;
+    @OneToMany(mappedBy = "pedido")
+    private List<itemPedido> itemPedido;
 
     private String rua;
     private Integer numero;

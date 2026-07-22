@@ -17,14 +17,4 @@ public class CarrinhoDTO {
 
 
 
-
-    /*Carrinho novoCarrinho = new Carrinho();
-            novoCarrinho.setStatusCarrinho(StatusCarrinho.ABERTO);
-            novoCarrinho.setCliente(cliente);
-            novoCarrinho.setDataCriacao(dataHoraCriacao);
-            novoCarrinho.setValorTotal(BigDecimal.ZERO);
-            carrinhoRepository.save(novoCarrinho);
-            return novoCarrinho;*/
-
-
 }

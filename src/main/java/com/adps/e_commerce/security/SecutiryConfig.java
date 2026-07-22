@@ -59,6 +59,8 @@ public class SecutiryConfig {
                         .requestMatchers("/categoria/**").hasRole("ADMIN")
                         .requestMatchers("/produto/**").hasRole("ADMIN")
 
+                        .requestMatchers("/compra/finalizarCompra").hasRole("USER")
+
                         .anyRequest().authenticated()
 
                 )

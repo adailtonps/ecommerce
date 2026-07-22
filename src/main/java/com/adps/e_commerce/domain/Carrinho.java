@@ -29,6 +29,6 @@ public class Carrinho {
 
     private LocalDateTime dataCriacao;
 
-    @OneToMany
+    @OneToMany(mappedBy = "carrinho")
     private List<ItemCarrinho> itemCarrinho;
 }

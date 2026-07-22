@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface ItemCarrinhoRepository extends JpaRepository<ItemCarrinho,Integer> {
+public interface ItemCarrinhoRepository extends JpaRepository<ItemCarrinho,String> {
     ItemCarrinho findByCarrinhoAndProduto (Carrinho carrinho, Produto produto);
     List<ItemCarrinho> findByCarrinho (Carrinho carrinho);
 }

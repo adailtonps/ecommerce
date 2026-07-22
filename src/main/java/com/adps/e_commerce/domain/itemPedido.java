@@ -15,7 +15,7 @@ import java.util.UUID;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class itemProduto {
+public class itemPedido {
     @Id
     private String idItemProduto;
 

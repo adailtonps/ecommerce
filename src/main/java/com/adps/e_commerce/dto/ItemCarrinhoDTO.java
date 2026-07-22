@@ -3,7 +3,6 @@ package com.adps.e_commerce.dto;
 import com.adps.e_commerce.domain.Carrinho;
 import com.adps.e_commerce.domain.Produto;
 import com.adps.e_commerce.enums.StatusItem;
-import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,7 +13,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ItemCarrinhoDTO {
-    private Integer idItem;
+    private String idItem;
 
     private Carrinho carrinho;
 

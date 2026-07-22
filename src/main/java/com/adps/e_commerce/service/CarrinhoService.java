@@ -54,9 +54,16 @@ public class CarrinhoService {
         novoItem.setCarrinho(carrinho);
         novoItem.setQuantidade(1);
         novoItem.setPrecoUnitario(produto.getPreco());
+        novoItem.setPrecoTotal(produto.getPreco());
 
+        BigDecimal totalAtual = carrinho.getValorTotal() == null
+                ? BigDecimal.ZERO
+                : carrinho.getValorTotal();
+
+        carrinho.setValorTotal(totalAtual.add(produto.getPreco()));
 
         itemCarrinhoRepository.save(novoItem);
+        carrinhoRepository.save(carrinho);
 
         return ResponseEntity.ok().body("Produto adicionado com sucesso!");
     }
@@ -80,8 +87,14 @@ public class CarrinhoService {
         itemExiste.setQuantidade(itemExiste.getQuantidade() + 1);
         BigDecimal qntConvertida= (BigDecimal.valueOf(itemExiste.getQuantidade())) ;
         itemExiste.setPrecoTotal(produto.getPreco().multiply(qntConvertida));
+        BigDecimal totalAtual = carrinho.getValorTotal() == null
+                ? BigDecimal.ZERO
+                : carrinho.getValorTotal();
+
+        carrinho.setValorTotal(totalAtual.add(produto.getPreco()));
 
         itemCarrinhoRepository.save(itemExiste);
+        carrinhoRepository.save(carrinho);
 
         return ResponseEntity.ok().body("Quantidade atualizada com sucesso!");
     }
@@ -102,7 +115,12 @@ public class CarrinhoService {
             throw new RegradeNegocioException("Quantidade inválida!");
         }
         itemExiste.setQuantidade(itemExiste.getQuantidade() - 1);
-        itemExiste.setPrecoTotal(itemExiste.getPrecoTotal().subtract(itemExiste.getPrecoUnitario()));
+        itemExiste.setPrecoTotal(itemExiste.getPrecoUnitario().multiply(BigDecimal.valueOf(itemExiste.getQuantidade())));
+        BigDecimal totalAtual = carrinho.getValorTotal() == null
+                ? BigDecimal.ZERO
+                : carrinho.getValorTotal();
+
+        carrinho.setValorTotal(totalAtual.subtract(produto.getPreco()));
         itemCarrinhoRepository.save(itemExiste);
 
         return ResponseEntity.ok().body("Quantidade atualizada com sucesso!");
@@ -116,7 +134,9 @@ public class CarrinhoService {
             throw new RegradeNegocioException("Carrinho desativado!");
         }
 
+        carrinho.setValorTotal(carrinho.getValorTotal().subtract(itemCarrinho.getPrecoTotal()));
         itemCarrinhoRepository.delete(itemExiste);
+        carrinhoRepository.save(carrinho);
 
         return ResponseEntity.ok().body("Produto removido com sucesso!");
     }
