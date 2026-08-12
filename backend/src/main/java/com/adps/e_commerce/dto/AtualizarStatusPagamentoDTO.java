@@ -12,5 +12,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class AtualizarStatusPagamentoDTO {
     private String idPedido;
-    private StatusPedido statusPedido;
+    private StatusPedido statusPagamento;
 }

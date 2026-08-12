@@ -72,8 +72,8 @@ public class CompraService {
 
         for (String cadaIdItemNoCarrinho : compraDTO.getIdItemCarrinho()) {
             ItemCarrinho itemExisteNoCarrinho = itemCarrinhoRepository.findByIdItemAndCarrinho(
-                    cadaIdItemNoCarrinho,carrinho).orElseThrow(
-                            () -> new RegradeNegocioException("Esse item não está no carrinho!")
+                    cadaIdItemNoCarrinho, carrinho).orElseThrow(
+                    () -> new RegradeNegocioException("Esse item não está no carrinho!")
             );
 
             Produto produtoEmItemCarrinho = itemExisteNoCarrinho.getProduto();
@@ -95,7 +95,7 @@ public class CompraService {
                     produtoEmItemCarrinho.getQntEstoque() - itemExisteNoCarrinho.getQuantidade()
             );
 
-            total =  total.add(itemExisteNoCarrinho.getPrecoTotal());
+            total = total.add(itemExisteNoCarrinho.getPrecoTotal());
 
             itemPedidoRepository.save(novoItemPedido);
 
@@ -130,39 +130,32 @@ public class CompraService {
                 pedido.getCodigoPagamento()
         );
     }
-    public void confirmarPagamento(AtualizarStatusPagamentoDTO dto){
+
+    public void confirmarPagamento(AtualizarStatusPagamentoDTO dto) {
+        System.out.println("1 - entrou n oservice");
+        System.out.println("id "+dto.getIdPedido());
+        System.out.println("status"+dto.getStatusPagamento());
+
         Pedido pedido = pedidoRepository.findByIdPedido(dto.getIdPedido())
                 .orElseThrow(() -> new RegradeNegocioException("Pedido não encontrado!"));
 
+        System.out.println("pedido encontrado"+pedido);
+        System.out.println("Status atual "+pedido.getStatusPedido());
         //fazer a verificacao de endereco vazio!!
 
-        if(dto.getStatusPedido() == StatusPedido.CANCELADO){
-            for(itemPedido itensCancelados : pedido.getItemPedido()){
+        if (dto.getStatusPagamento() == StatusPedido.CANCELADO) {
+            System.out.println("pagamento cancelado");
+            for (itemPedido itensCancelados : pedido.getItemPedido()) {
                 int retornoEstoque = itensCancelados.getProduto().getQntEstoque();
-                itensCancelados.getProduto().setQntEstoque(retornoEstoque+itensCancelados.getQuantidade());
+                itensCancelados.getProduto().setQntEstoque(retornoEstoque + itensCancelados.getQuantidade());
                 pedido.setStatusPedido(StatusPedido.CANCELADO);
                 produtoRepository.save(itensCancelados.getProduto());
             }
-        } else if (dto.getStatusPedido() == StatusPedido.PAGO){
+        } else if (dto.getStatusPagamento() == StatusPedido.PAGO) {
+            System.out.println("pagamento feito");
             pedido.setStatusPedido(StatusPedido.PAGO);
         }
         pedidoRepository.save(pedido);
     }
-
-
-
-    /*Identifica o usuário pelo JWT.
-Busca o carrinho do usuário.
-Verifica se o carrinho está ativo e não está vazio.
-Percorre a lista de IDs enviada no DTO (for ou forEach).
-Para cada ID:
-verifica se o item existe;
-verifica se pertence ao carrinho desse usuário;
-verifica o estoque;
-adiciona ao pedido;
-atualiza o estoque.
-Calcula o valor total apenas dos itens selecionados.
-Gera o pagamento.
-Remove apenas os itens comprados do carrinho (ou marca-os como comprados, dependendo da regra do seu sistema).*/
 }
 

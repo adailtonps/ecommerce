@@ -22,7 +22,12 @@ public class ConfirmarPagamentoController {
     public ResponseEntity<Void>confirmarPagamento(
             @RequestBody AtualizarStatusPagamentoDTO pagamento) {
 
+        System.out.println("Chegou no controller");
+        System.out.println("1 - id do pedido"+pagamento.getIdPedido());
+        System.out.println("2 - status do pagamento"+pagamento.getStatusPagamento());
+
         compraService.confirmarPagamento(pagamento);
+        System.out.println("Service terminou");
         return ResponseEntity.ok().build();
     }
 }
