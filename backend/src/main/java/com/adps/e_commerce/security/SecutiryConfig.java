@@ -49,7 +49,7 @@ public class SecutiryConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/auth/cliente").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/admin/criar").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/admin/criar").hasRole("USER")
 
                         .requestMatchers(HttpMethod.GET, "/produto/**").hasAnyRole("ADMIN","USER")
                         .requestMatchers(HttpMethod.GET, "/categoria/**").hasAnyRole("ADMIN","USER")
