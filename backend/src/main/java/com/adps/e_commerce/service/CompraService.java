@@ -7,10 +7,15 @@ import com.adps.e_commerce.enums.StatusCarrinho;
 import com.adps.e_commerce.enums.UsuarioRole;
 import com.adps.e_commerce.exception.RegradeNegocioException;
 import com.adps.e_commerce.repository.*;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -26,7 +31,9 @@ public class CompraService {
     private final itemPedidoRepository itemPedidoRepository;
     private final ItemCarrinhoRepository itemCarrinhoRepository;
 
-    public FinalizarCompraDTO finalizarComprar(CompraDTO compraDTO, Usuario userLogado) {
+    public FinalizarCompraDTO finalizarComprar(CompraDTO compraDTO,
+                                               Usuario userLogado,
+                                               HttpServletRequest httpServletRequest) {
         Usuario userExiste = usuarioRepository.findByIdUsuario(userLogado.getIdUsuario())
                 .orElseThrow(() -> new RegradeNegocioException("Usuário não encontrado!"));
 
@@ -108,13 +115,21 @@ public class CompraService {
         dto.setIdPedido(pedido.getIdPedido());
         dto.setValorTotal(pedido.getValorTotal());
 
+        String authorization = httpServletRequest.getHeader("Authorization");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", authorization);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<CriarPagamentoDTO> entity = new HttpEntity<>(dto, headers);
+
         RestTemplate restTemplate = new RestTemplate();
         String url = "https://minisistemabancario.onrender.com/pagamento/gerar";
 
         ResponseEntity<PagamentoResponseDTO> response =
                 restTemplate.postForEntity(
                         url,
-                        dto,
+                        entity,
                         PagamentoResponseDTO.class
                 );
 

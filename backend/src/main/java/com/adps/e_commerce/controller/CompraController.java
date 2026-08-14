@@ -4,6 +4,7 @@ import com.adps.e_commerce.domain.Usuario;
 import com.adps.e_commerce.dto.CompraDTO;
 import com.adps.e_commerce.dto.FinalizarCompraDTO;
 import com.adps.e_commerce.service.CompraService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +20,10 @@ public class CompraController {
     @PostMapping("/finalizarCompra")
     public ResponseEntity<FinalizarCompraDTO> finalizarCompra(
             @AuthenticationPrincipal Usuario usuarioLogado,
+            HttpServletRequest request,
+
             @RequestBody CompraDTO compraDTO){
-        FinalizarCompraDTO compra = compraService.finalizarComprar(compraDTO, usuarioLogado);
+        FinalizarCompraDTO compra = compraService.finalizarComprar(compraDTO, usuarioLogado, request);
         return ResponseEntity.status(HttpStatus.OK).body(compra);
     }
 }
