@@ -25,8 +25,10 @@ public class ApiKeyFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
         String path = request.getRequestURI();
 
-        if (path.equals("/pedido/pagamento-confirmado")) {
+        if (path.equals("/pedidos/pagamento-confirmado")) {
             String apiKey = request.getHeader("X-Service-Key");
+
+            System.out.println("Recebida: " + apiKey);
 
             if (apiKey == null || !apiKey.equals(ecommerceApiKey)) {
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);
