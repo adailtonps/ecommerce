@@ -10,6 +10,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+import static org.aspectj.weaver.tools.cache.SimpleCacheFactory.path;
+
 @Component
 public class ApiKeyFilter extends OncePerRequestFilter {
     @Value("${ECOMMERCE_API_KEY}")
@@ -22,11 +24,14 @@ public class ApiKeyFilter extends OncePerRequestFilter {
             FilterChain Filterchain
     ) throws ServletException, IOException {
 
-        String apiKey = request.getHeader("X-Service-Key");
+        if (path.equals("/pedido/pagamento-confirmado")) {
+            String apiKey = request.getHeader("X-Service-Key");
 
-        if (apiKey == null || !apiKey.equals(ecommerceApiKey)) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            return;
-        } Filterchain.doFilter(request, response);
+            if (apiKey == null || !apiKey.equals(ecommerceApiKey)) {
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                return;
+            }
+            Filterchain.doFilter(request, response);
+        }
     }
 }
