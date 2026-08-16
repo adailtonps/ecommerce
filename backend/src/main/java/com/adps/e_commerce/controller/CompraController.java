@@ -23,7 +23,7 @@ public class CompraController {
             HttpServletRequest request,
 
             @RequestBody CompraDTO compraDTO){
-        FinalizarCompraDTO compra = compraService.finalizarComprar(compraDTO, usuarioLogado, request);
+        FinalizarCompraDTO compra = compraService.finalizarComprar(compraDTO, usuarioLogado);
         return ResponseEntity.status(HttpStatus.OK).body(compra);
     }
 }

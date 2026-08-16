@@ -9,10 +9,11 @@ import com.adps.e_commerce.exception.RegradeNegocioException;
 import com.adps.e_commerce.repository.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -31,9 +32,13 @@ public class CompraService {
     private final itemPedidoRepository itemPedidoRepository;
     private final ItemCarrinhoRepository itemCarrinhoRepository;
 
+    @Value("${BANCO_API_KEY}")
+    private String bancoApiKey;
+
+    @Transactional
     public FinalizarCompraDTO finalizarComprar(CompraDTO compraDTO,
-                                               Usuario userLogado,
-                                               HttpServletRequest httpServletRequest) {
+                                               Usuario userLogado) {
+
         Usuario userExiste = usuarioRepository.findByIdUsuario(userLogado.getIdUsuario())
                 .orElseThrow(() -> new RegradeNegocioException("Usuário não encontrado!"));
 
@@ -72,9 +77,6 @@ public class CompraService {
         pedido.setComplemento(userExiste.getComplemento());
         pedido.setDataPedido(LocalDateTime.now());
 
-
-        pedidoRepository.save(pedido);
-
         BigDecimal total = BigDecimal.ZERO;
 
         for (String cadaIdItemNoCarrinho : compraDTO.getIdItemCarrinho()) {
@@ -111,14 +113,16 @@ public class CompraService {
 
         pedido.setValorTotal(total);
 
+        pedidoRepository.save(pedido);
+
         CriarPagamentoDTO dto = new CriarPagamentoDTO();
         dto.setIdPedido(pedido.getIdPedido());
         dto.setValorTotal(pedido.getValorTotal());
 
-        String authorization = httpServletRequest.getHeader("Authorization");
+        String apiKey = bancoApiKey;
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", authorization);
+        headers.set("X-Service-Key", apiKey);
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         HttpEntity<CriarPagamentoDTO> entity = new HttpEntity<>(dto, headers);
@@ -136,8 +140,6 @@ public class CompraService {
         String codigoPagamento = response.getBody().getCodigoPagamento();
 
         pedido.setCodigoPagamento(codigoPagamento);
-        pedidoRepository.save(pedido);
-
 
         return new FinalizarCompraDTO(
                 "Aguardando o pagamento do pedido...",
@@ -147,19 +149,12 @@ public class CompraService {
     }
 
     public void confirmarPagamento(AtualizarStatusPagamentoDTO dto) {
-        System.out.println("1 - entrou n oservice");
-        System.out.println("id "+dto.getIdPedido());
-        System.out.println("status"+dto.getStatusPagamento());
-
         Pedido pedido = pedidoRepository.findByIdPedido(dto.getIdPedido())
                 .orElseThrow(() -> new RegradeNegocioException("Pedido não encontrado!"));
 
-        System.out.println("pedido encontrado"+pedido);
-        System.out.println("Status atual "+pedido.getStatusPedido());
         //fazer a verificacao de endereco vazio!!
 
         if (dto.getStatusPagamento() == StatusPedido.CANCELADO) {
-            System.out.println("pagamento cancelado");
             for (itemPedido itensCancelados : pedido.getItemPedido()) {
                 int retornoEstoque = itensCancelados.getProduto().getQntEstoque();
                 itensCancelados.getProduto().setQntEstoque(retornoEstoque + itensCancelados.getQuantidade());
@@ -167,7 +162,6 @@ public class CompraService {
                 produtoRepository.save(itensCancelados.getProduto());
             }
         } else if (dto.getStatusPagamento() == StatusPedido.PAGO) {
-            System.out.println("pagamento feito");
             pedido.setStatusPedido(StatusPedido.PAGO);
         }
         pedidoRepository.save(pedido);
