@@ -51,6 +51,8 @@ public class SecutiryConfig {
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/admin/criar").hasRole("ADMIN")
 
+                        .requestMatchers(HttpMethod.POST,"pedidos/pagamento-confirmado").permitAll()
+
                         .requestMatchers(HttpMethod.GET, "/produto/**").hasAnyRole("ADMIN","USER")
                         .requestMatchers(HttpMethod.GET, "/categoria/**").hasAnyRole("ADMIN","USER")
 
@@ -62,7 +64,6 @@ public class SecutiryConfig {
                         .requestMatchers("/compra/**").hasRole("USER")
 
                         .requestMatchers(HttpMethod.POST,"/carrinho/adicionar").hasRole("USER")
-
                         .anyRequest().authenticated()
 
                 )
