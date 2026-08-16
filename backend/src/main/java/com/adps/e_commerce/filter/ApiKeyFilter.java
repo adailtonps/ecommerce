@@ -23,6 +23,7 @@ public class ApiKeyFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain Filterchain
     ) throws ServletException, IOException {
+        String path = request.getRequestURI();
 
         if (path.equals("/pedido/pagamento-confirmado")) {
             String apiKey = request.getHeader("X-Service-Key");
@@ -31,7 +32,6 @@ public class ApiKeyFilter extends OncePerRequestFilter {
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                 return;
             }
-            Filterchain.doFilter(request, response);
-        }
+        } Filterchain.doFilter(request, response);
     }
 }
