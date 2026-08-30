@@ -55,6 +55,10 @@ public class CompraService {
             throw new RegradeNegocioException("Já existe um pedido pendente! Você precisa cancelar ou pagar para fazer outro");
         }
 
+        if(!userExiste.enderecoCompleto()){
+            throw new RegradeNegocioException("Preencha o endereço primeiro antes de comprar!");
+        }
+
         Pedido pedido = new Pedido();
 
         Carrinho carrinho = carrinhoRepository.findByUsuario(userExiste);
@@ -115,6 +119,7 @@ public class CompraService {
 
         pedidoRepository.save(pedido);
 
+
         CriarPagamentoDTO dto = new CriarPagamentoDTO();
         dto.setIdPedido(pedido.getIdPedido());
         dto.setValorTotal(pedido.getValorTotal());
@@ -155,9 +160,6 @@ public class CompraService {
         Usuario user = usuarioRepository.findByIdUsuario(pedido.getUsuario().getIdUsuario())
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
 
-        if(!user.enderecoCompleto()){
-            throw new RegradeNegocioException("Preencha o endereço primeiro antes de comprar!");
-        }
 
         if (dto.getStatusPagamento() == StatusPedido.CANCELADO) {
             for (itemPedido itensCancelados : pedido.getItemPedido()) {
