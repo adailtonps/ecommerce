@@ -152,7 +152,12 @@ public class CompraService {
         Pedido pedido = pedidoRepository.findByIdPedido(dto.getIdPedido())
                 .orElseThrow(() -> new RegradeNegocioException("Pedido não encontrado!"));
 
-        //fazer a verificacao de endereco vazio!!
+        Usuario user = usuarioRepository.findByIdUsuario(pedido.getUsuario().getIdUsuario())
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+
+        if(!user.enderecoCompleto()){
+            throw new RegradeNegocioException("Preencha o endereço primeiro antes de comprar!");
+        }
 
         if (dto.getStatusPagamento() == StatusPedido.CANCELADO) {
             for (itemPedido itensCancelados : pedido.getItemPedido()) {

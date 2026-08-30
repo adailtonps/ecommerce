@@ -57,4 +57,13 @@ public class Usuario {
 
     @OneToOne(mappedBy = "usuario")
     private Carrinho carrinho;
+
+    public boolean enderecoCompleto(){
+        return rua != null && rua.isBlank() &&
+                numero != null &&
+                bairro != null && bairro.isBlank() &&
+                cidade != null && cidade.isBlank() &&
+                estado != null && estado.isBlank() &&
+                cep != null && cep.isBlank();
+    }
 }
