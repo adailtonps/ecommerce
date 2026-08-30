@@ -64,7 +64,7 @@ public class AdminService {
         if (cliente.getEstado() == null || cliente.getEstado().isBlank()){
             throw new RegradeNegocioException("Endereço obrigatório: Estado");
         }
-        if (cliente.getCep() == null){
+        if (cliente.getCep() == null || cliente.getCep().isBlank()){
             throw new RegradeNegocioException("Endereço obrigatório: Cep");
         }
         if (cliente.getComplemento() == null || cliente.getComplemento().isBlank()){
@@ -92,7 +92,7 @@ public class AdminService {
         novoAdmin.setEmail(cliente.getEmail().trim());
         novoAdmin.setSenha(encoder.encode(cliente.getSenha()));
         novoAdmin.setRua(cliente.getRua().trim().toUpperCase());
-        novoAdmin.setCep(cliente.getCep());
+        novoAdmin.setCep(cliente.getCep().trim());
         novoAdmin.setEstado(cliente.getEstado().trim().toUpperCase());
         novoAdmin.setComplemento(cliente.getComplemento().trim().toUpperCase());
         novoAdmin.setCidade(cliente.getCidade().trim().toUpperCase());

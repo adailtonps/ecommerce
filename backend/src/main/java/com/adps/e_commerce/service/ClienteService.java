@@ -113,11 +113,11 @@ public class ClienteService {
            usuarioLogado.setCidade(endereco.getCidade().trim().toUpperCase());
            usuarioLogado.setEstado(endereco.getEstado().trim().toUpperCase());
 
-           if(!endereco.getCep().equals(8)){
+           if(endereco.getCep().length() != 8){
                throw new RegradeNegocioException("CEP inválido!");
            }
 
-           usuarioLogado.setCep(endereco.getCep());
+           usuarioLogado.setCep(endereco.getCep().trim().toUpperCase());
 
            if(endereco.getComplemento() != null && !endereco.getComplemento().isBlank()){
                usuarioLogado.setComplemento(endereco.getComplemento().trim().toUpperCase());

@@ -20,7 +20,7 @@ public class AdminResponseDTO {
     private String bairro;
     private String cidade;
     private String estado;
-    private Integer cep;
+    private String cep;
     private String complemento;
     private StatusUsuario userStatus;
 }

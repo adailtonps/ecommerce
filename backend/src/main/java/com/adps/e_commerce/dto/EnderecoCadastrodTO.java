@@ -30,7 +30,7 @@ public class EnderecoCadastrodTO {
 
     @NotNull
     @Pattern(regexp = "\\d{8}",message = "CEP deve conter 8 dígitos!")
-    private Integer cep;
+    private String cep;
 
     private String complemento;
 }
