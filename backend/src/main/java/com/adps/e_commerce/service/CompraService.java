@@ -170,6 +170,7 @@ public class CompraService {
             }
         } else if (dto.getStatusPagamento() == StatusPedido.PAGO) {
             pedido.setStatusPedido(StatusPedido.PAGO);
+            pedido.setDataPagamento(LocalDateTime.now());
         }
         pedidoRepository.save(pedido);
     }
