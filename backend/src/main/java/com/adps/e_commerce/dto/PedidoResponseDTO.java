@@ -23,7 +23,7 @@ public class PedidoResponseDTO {
     private String bairro;
     private String cidade;
     private String estado;
-    private String cep;
+    private Integer cep;
     private String complemento;
     private List<ItemPedidoResponseDTO> itens;
 }

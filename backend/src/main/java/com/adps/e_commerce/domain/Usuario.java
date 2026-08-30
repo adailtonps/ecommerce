@@ -43,7 +43,7 @@ public class Usuario {
     private String bairro;
     private String cidade;
     private String estado;
-    private String cep;
+    private Integer cep;
     private String complemento;
 
     @JsonIgnore
@@ -59,11 +59,11 @@ public class Usuario {
     private Carrinho carrinho;
 
     public boolean enderecoCompleto(){
-        return rua != null && rua.isBlank() &&
+        return rua != null && !rua.isBlank() &&
                 numero != null &&
-                bairro != null && bairro.isBlank() &&
-                cidade != null && cidade.isBlank() &&
-                estado != null && estado.isBlank() &&
-                cep != null && cep.isBlank();
+                bairro != null && !bairro.isBlank() &&
+                cidade != null && !cidade.isBlank() &&
+                estado != null && !estado.isBlank() &&
+                cep != null;
     }
 }

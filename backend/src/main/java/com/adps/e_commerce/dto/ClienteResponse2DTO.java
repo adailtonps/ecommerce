@@ -20,7 +20,7 @@ public class ClienteResponse2DTO {
     private String bairro;
     private String cidade;
     private String estado;
-    private String cep;
+    private Integer cep;
     private String complemento;
     private StatusUsuario userStatus;
 }
