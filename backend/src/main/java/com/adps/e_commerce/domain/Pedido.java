@@ -36,6 +36,10 @@ public class Pedido {
     @ManyToOne
     private Usuario usuario;
 
+    private Long id_do_pagador;
+
+    private String nome_do_pagador;
+
     private BigDecimal valorTotal;
 
     private String codigoPagamento;

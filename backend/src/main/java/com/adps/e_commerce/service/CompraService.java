@@ -135,8 +135,6 @@ public class CompraService {
         RestTemplate restTemplate = new RestTemplate();
         String url = "https://minisistemabancario.onrender.com/pagamento/gerar";
 
-        System.out.println("API KEY: " + apiKey);
-        System.out.println("URL: " + url);
         ResponseEntity<PagamentoResponseDTO> response =
                 restTemplate.postForEntity(
                         url,
@@ -174,6 +172,8 @@ public class CompraService {
         } else if (dto.getStatusPagamento() == StatusPedido.PAGO) {
             pedido.setStatusPedido(StatusPedido.PAGO);
             pedido.setDataPagamento(LocalDateTime.now());
+            pedido.setId_do_pagador(dto.getId_do_pagador());
+            pedido.setNome_do_pagador(dto.getNome_do_pagador());
         }
         pedidoRepository.save(pedido);
     }

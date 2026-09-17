@@ -16,4 +16,6 @@ public class AtualizarStatusPagamentoDTO {
     private String idPedido;
     private StatusPedido statusPagamento;
     private LocalDateTime dataPagamento;
+    private Long id_do_pagador;
+    private String nome_do_pagador;
 }
