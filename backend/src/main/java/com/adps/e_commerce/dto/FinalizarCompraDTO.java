@@ -14,4 +14,6 @@ public class FinalizarCompraDTO {
     private String mensagem;
     private String idPedido;
     private String codigoPagamento;
+    private String nomeDoSolicitante;
+    private String idDoSolicitante;
 }

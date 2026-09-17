@@ -7,7 +7,6 @@ import com.adps.e_commerce.enums.StatusCarrinho;
 import com.adps.e_commerce.enums.UsuarioRole;
 import com.adps.e_commerce.exception.RegradeNegocioException;
 import com.adps.e_commerce.repository.*;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -123,7 +122,8 @@ public class CompraService {
         CriarPagamentoDTO dto = new CriarPagamentoDTO();
         dto.setIdPedido(pedido.getIdPedido());
         dto.setValorTotal(pedido.getValorTotal());
-
+        dto.setIdDoSolicitante(userExiste.getIdUsuario());
+        dto.setNomeDoSolicitante(userExiste.getNome());
         String apiKey = bancoApiKey;
 
         HttpHeaders headers = new HttpHeaders();
@@ -149,7 +149,9 @@ public class CompraService {
         return new FinalizarCompraDTO(
                 "Aguardando o pagamento do pedido...",
                 pedido.getIdPedido(),
-                pedido.getCodigoPagamento()
+                pedido.getCodigoPagamento(),
+                userExiste.getNome(),
+                userExiste.getIdUsuario()
         );
     }
 
@@ -159,7 +161,6 @@ public class CompraService {
 
         Usuario user = usuarioRepository.findByIdUsuario(pedido.getUsuario().getIdUsuario())
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
-
 
         if (dto.getStatusPagamento() == StatusPedido.CANCELADO) {
             for (itemPedido itensCancelados : pedido.getItemPedido()) {
